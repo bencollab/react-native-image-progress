@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { ActivityIndicator, Image, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, Image, StyleSheet, View, Animated } from 'react-native';
 
 const styles = StyleSheet.create({
   container: {
@@ -20,6 +20,7 @@ export default class ImageProgress extends Component {
     source: PropTypes.any,
     style: PropTypes.any,
     threshold: PropTypes.number.isRequired,
+    animated: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -130,6 +131,7 @@ export default class ImageProgress extends Component {
       renderIndicator,
       source,
       threshold,
+      animated,
       ...props
     } = this.props;
     const { progress, thresholdReached, loading } = this.state;
@@ -154,8 +156,11 @@ export default class ImageProgress extends Component {
         );
       }
     }
+    
+    const ViewComponent = animated ? Animated.View : View;
+
     return (
-      <View style={style} ref={this.handleRef}>
+      <ViewComponent style={style} ref={this.handleRef}>
         <Image
           {...props}
           key={source ? source.uri || source : undefined}
@@ -167,7 +172,7 @@ export default class ImageProgress extends Component {
           style={StyleSheet.absoluteFill}
         />
         {content}
-      </View>
+      </ViewComponent>
     );
   }
 }
